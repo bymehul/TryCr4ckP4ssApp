@@ -1,0 +1,275 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TryCr4ckP4ss.ViewModels"
+        x:Class="TryCr4ckP4ss.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="TryCr4ckP4ss"
+        Width="880" Height="620"
+        MinWidth="700" MinHeight="500"
+        WindowStartupLocation="CenterScreen"
+        Background="#1a1b26"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Window.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="#c0caf5"/>
+            <Setter Property="FontFamily" Value="Inter, SF Pro Display, Segoe UI, sans-serif"/>
+        </Style>
+
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#24283b"/>
+            <Setter Property="Foreground" Value="#c0caf5"/>
+            <Setter Property="BorderBrush" Value="#414868"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="#7aa2f7"/>
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#292e42"/>
+            <Setter Property="Foreground" Value="#c0caf5"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#3b4261"/>
+        </Style>
+        <Style Selector="Button:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#414868"/>
+        </Style>
+
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#7aa2f7"/>
+            <Setter Property="Foreground" Value="#1a1b26"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#9bb8f8"/>
+        </Style>
+
+        <Style Selector="Button.ghost">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#a9b1d6"/>
+            <Setter Property="Padding" Value="10,8"/>
+        </Style>
+        <Style Selector="Button.ghost:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#292e42"/>
+        </Style>
+
+        <Style Selector="Button.danger">
+            <Setter Property="Background" Value="#414868"/>
+            <Setter Property="Foreground" Value="#ff757f"/>
+        </Style>
+        <Style Selector="Button.danger:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#ff757f"/>
+            <Setter Property="Foreground" Value="#1a1b26"/>
+        </Style>
+
+        <Style Selector="Button.category">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#a9b1d6"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="CornerRadius" Value="6"/>
+        </Style>
+        <Style Selector="Button.category:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#24283b"/>
+        </Style>
+        <Style Selector="Button.category.active">
+            <Setter Property="Background" Value="#292e42"/>
+            <Setter Property="Foreground" Value="#7aa2f7"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <!-- Login -->
+        <Grid IsVisible="{Binding !IsAuthenticated}" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Spacing="0" Width="360">
+                <StackPanel Spacing="8" Margin="0,0,0,40" HorizontalAlignment="Center">
+                    <Border Background="#292e42" CornerRadius="24" Width="80" Height="80" Margin="0,0,0,20">
+                        <Viewbox Width="36" Height="36">
+                            <Canvas Width="24" Height="24">
+                                <Path Fill="#7aa2f7" Data="M12 1C8.676 1 6 3.676 6 7v2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V11a2 2 0 0 0-2-2h-2V7c0-3.324-2.676-6-6-6zm0 2c2.276 0 4 1.724 4 4v2H8V7c0-2.276 1.724-4 4-4z"/>
+                            </Canvas>
+                        </Viewbox>
+                    </Border>
+                    <TextBlock Text="TryCr4ckP4ss" FontSize="32" FontWeight="Bold" Foreground="#7aa2f7"/>
+                    <TextBlock Text="secure password vault" FontSize="13" Foreground="#565f89"/>
+                </StackPanel>
+
+                <Border Background="#24283b" CornerRadius="16" Padding="32">
+                    <StackPanel Spacing="24">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Master Password" FontSize="12" Foreground="#565f89"/>
+                            <TextBox x:Name="LoginPasswordBox" Text="{Binding LoginPassword}" Watermark="Enter password..." PasswordChar="●" FontSize="15" KeyDown="OnLoginKeyDown"/>
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding LoginError}" IsVisible="{Binding IsLoginFailed}" Foreground="#ff757f" FontSize="12"/>
+
+                        <Button Content="Unlock Vault" Command="{Binding LoginCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="16,12"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12" Margin="0,24,0,0">
+                    <TextBlock Text="AES-256" FontSize="10" Foreground="#414868"/>
+                    <TextBlock Text="PBKDF2" FontSize="10" Foreground="#414868"/>
+                    <TextBlock Text="Local Storage" FontSize="10" Foreground="#414868"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- Main App -->
+        <Grid IsVisible="{Binding IsAuthenticated}" ColumnDefinitions="220,*">
+            <!-- Sidebar -->
+            <Border Background="#16161e">
+                <StackPanel Margin="20">
+                    <!-- Logo -->
+                    <StackPanel Spacing="6" Margin="0,0,0,32">
+                        <TextBlock Text="TryCr4ckP4ss" FontSize="16" FontWeight="Bold" Foreground="#7aa2f7"/>
+                        <TextBlock Text="{Binding TotalCount, StringFormat='{}{0} passwords'}" FontSize="11" Foreground="#565f89"/>
+                    </StackPanel>
+
+                    <!-- Add Button -->
+                    <Button Content="+ Add Password" Command="{Binding ShowAddCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,0,28"/>
+
+                    <!-- Categories -->
+                    <TextBlock Text="Categories" FontSize="11" Foreground="#565f89" Margin="0,0,0,12"/>
+                    <StackPanel Spacing="4">
+                        <Button Content="All" Command="{Binding SelectCategoryCommand}" CommandParameter="all" Classes="category"/>
+                        <Button Content="Social" Command="{Binding SelectCategoryCommand}" CommandParameter="social" Classes="category"/>
+                        <Button Content="Work" Command="{Binding SelectCategoryCommand}" CommandParameter="work" Classes="category"/>
+                        <Button Content="Finance" Command="{Binding SelectCategoryCommand}" CommandParameter="finance" Classes="category"/>
+                        <Button Content="Shopping" Command="{Binding SelectCategoryCommand}" CommandParameter="shopping" Classes="category"/>
+                        <Button Content="Development" Command="{Binding SelectCategoryCommand}" CommandParameter="development" Classes="category"/>
+                    </StackPanel>
+
+                    <!-- Lock -->
+                    <Button Content="Lock Vault" Command="{Binding LogoutCommand}" Classes="ghost" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,32,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Content -->
+            <Grid RowDefinitions="Auto,*">
+                <!-- Header -->
+                <Border Padding="24,20" BorderBrush="#292e42" BorderThickness="0,0,0,1">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Vault" FontSize="22" FontWeight="Bold"/>
+                            <TextBlock FontSize="12" Foreground="#565f89">
+                                <Run Text="{Binding SelectedCategory}"/>
+                                <Run Text=" • "/>
+                                <Run Text="{Binding Credentials.Count}"/>
+                                <Run Text=" items"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <TextBox Text="{Binding SearchTerm}" Watermark="Search passwords..." Width="280" KeyDown="OnSearchKeyDown"/>
+                    </Grid>
+                </Border>
+
+                <!-- List -->
+                <ScrollViewer Grid.Row="1" Padding="24,16">
+                    <ItemsControl ItemsSource="{Binding Credentials}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:CredentialViewModel">
+                                <Border Background="#24283b" CornerRadius="10" Padding="16" Margin="0,0,0,10" Cursor="Hand" PointerPressed="OnCredentialClick">
+                                    <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <Border Width="40" Height="40" Background="#292e42" CornerRadius="8" Margin="0,0,14,0">
+                                            <TextBlock Text="{Binding CategoryIcon}" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Spacing="3" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Site}" FontWeight="SemiBold" FontSize="14"/>
+                                            <TextBlock Text="{Binding Username}" FontSize="12" Foreground="#565f89"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Button Content="Copy" Command="{Binding $parent[Window].DataContext.CopyPasswordCommand}" CommandParameter="{Binding}" Classes="ghost" FontSize="11"/>
+                                            <Button Content="Edit" Command="{Binding $parent[Window].DataContext.EditCredentialCommand}" CommandParameter="{Binding}" Classes="ghost" FontSize="11"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Empty -->
+                <StackPanel Grid.Row="1" IsVisible="{Binding IsEmpty}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
+                    <Border Background="#24283b" CornerRadius="24" Width="72" Height="72" HorizontalAlignment="Center">
+                        <TextBlock Text="+" FontSize="32" Foreground="#565f89" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="No passwords yet" FontSize="16" Foreground="#a9b1d6" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Add your first password to get started" FontSize="12" Foreground="#565f89" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!-- Add Dialog -->
+        <Border IsVisible="{Binding ShowAddDialog}" Background="#c01a1b26">
+            <Border Background="#24283b" CornerRadius="16" Padding="28" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" BoxShadow="0 25 50 15 #1a1b26">
+                <StackPanel Spacing="20">
+                    <TextBlock Text="New Password" FontSize="20" FontWeight="Bold" Foreground="#bb9af7"/>
+
+                    <StackPanel Spacing="14">
+                        <TextBox Text="{Binding NewSite}" Watermark="Website or app name"/>
+                        <TextBox Text="{Binding NewUsername}" Watermark="Username or email"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBox Text="{Binding NewPassword}" Watermark="Password" PasswordChar="●"/>
+                            <Button Grid.Column="1" Content="Generate" Command="{Binding GeneratePasswordCommand}" Margin="10,0,0,0"/>
+                        </Grid>
+                        <TextBox Text="{Binding NewUrl}" Watermark="URL (optional)"/>
+                        <TextBox Text="{Binding NewNotes}" Watermark="Notes (optional)" AcceptsReturn="True" Height="60"/>
+                        <CheckBox Content="Add to favorites" IsChecked="{Binding NewIsFavorite}"/>
+                    </StackPanel>
+
+                    <Border IsVisible="{Binding GeneratedPassword, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#1a1b26" CornerRadius="8" Padding="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="{Binding GeneratedPassword}" FontFamily="Consolas, monospace" FontSize="12" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Content="Use" Command="{Binding UseGeneratedPasswordCommand}" Classes="primary"/>
+                        </Grid>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,*" Margin="0,8,0,0">
+                        <Button Content="Cancel" Command="{Binding CancelAddCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        <Button Grid.Column="1" Content="Save" Command="{Binding AddCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <!-- Edit Dialog -->
+        <Border IsVisible="{Binding ShowEditDialog}" Background="#c01a1b26">
+            <Border Background="#24283b" CornerRadius="16" Padding="28" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel Spacing="20">
+                    <TextBlock Text="Edit Password" FontSize="20" FontWeight="Bold" Foreground="#7dcfff"/>
+
+                    <StackPanel Spacing="14">
+                        <TextBox Text="{Binding NewSite}" Watermark="Website"/>
+                        <TextBox Text="{Binding NewUsername}" Watermark="Username"/>
+                        <TextBox Text="{Binding NewPassword}" Watermark="Password" PasswordChar="●"/>
+                        <TextBox Text="{Binding NewUrl}" Watermark="URL"/>
+                        <TextBox Text="{Binding NewNotes}" Watermark="Notes" AcceptsReturn="True" Height="60"/>
+                        <CheckBox Content="Favorite" IsChecked="{Binding NewIsFavorite}"/>
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*,*,*" Margin="0,8,0,0">
+                        <Button Content="Cancel" Command="{Binding CancelAddCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        <Button Grid.Column="1" Content="Delete" Command="{Binding DeleteCredentialCommand}" CommandParameter="{Binding SelectedCredential}" Classes="danger" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+                        <Button Grid.Column="2" Content="Save" Command="{Binding SaveEditCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <!-- Toast -->
+        <Border IsVisible="{Binding ShowStatus}" Background="#7aa2f7" CornerRadius="8" Padding="16,10" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,24" BoxShadow="0 4 12 2 #7aa2f780">
+            <TextBlock Text="{Binding StatusMessage}" FontSize="13" Foreground="#1a1b26" FontWeight="Medium"/>
+        </Border>
+    </Grid>
+</Window>

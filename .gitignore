@@ -5,6 +5,8 @@ TryCr4ckP4ss/obj/
 TryCr4ckP4ss/Data/
 TryCr4ckP4ss/publish/
 artifacts/
+release-assets/
+release-zips/
 *.user
 *.suo
 *.swp

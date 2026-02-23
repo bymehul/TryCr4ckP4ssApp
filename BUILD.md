@@ -22,6 +22,18 @@ cd TryCr4ckP4ss
 dotnet build -c Release
 ```
 
+## One-Command Cross-Platform Build
+From repo root:
+```bash
+./build-all.sh
+```
+
+Optional:
+```bash
+./build-all.sh Debug
+SELF_CONTAINED=false ./build-all.sh
+```
+
 ## Publish Artifacts
 From repo root (`TryCr4ckP4ssApp`), publish into `artifacts/`:
 

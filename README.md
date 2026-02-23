@@ -24,8 +24,12 @@ dotnet restore
 dotnet run
 ```
 
+## AppImage
+![AppImage](AppImage.png)
+
 ## Build Docs
 - Cross-platform build + publish: [BUILD.md](BUILD.md)
+- GitHub Actions artifact workflow: `.github/workflows/build-artifacts.yml`
 
 ## Contributing
 - See [CONTRIBUTING.md](CONTRIBUTING.md)

@@ -1,0 +1,56 @@
+name: Build Artifacts
+
+on:
+  push:
+    branches: [master, main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux-x64
+            os: ubuntu-latest
+            rid: linux-x64
+          - name: win-x64
+            os: windows-latest
+            rid: win-x64
+          - name: osx-arm64
+            os: macos-latest
+            rid: osx-arm64
+          - name: osx-x64
+            os: macos-13
+            rid: osx-x64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore TryCr4ckP4ss/TryCr4ckP4ss.csproj
+
+      - name: Publish
+        run: >
+          dotnet publish TryCr4ckP4ss/TryCr4ckP4ss.csproj
+          -c Release
+          -r ${{ matrix.rid }}
+          --self-contained true
+          /p:PublishSingleFile=true
+          -o artifacts/${{ matrix.name }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TryCr4ckP4ss-${{ matrix.name }}
+          path: artifacts/${{ matrix.name }}

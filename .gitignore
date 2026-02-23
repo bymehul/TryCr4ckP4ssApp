@@ -1,2 +1,10 @@
-bin
-TryCr4ckP4ss/obj
+bin/
+obj/
+TryCr4ckP4ss/bin/
+TryCr4ckP4ss/obj/
+TryCr4ckP4ss/Data/
+TryCr4ckP4ss/publish/
+*.user
+*.suo
+*.swp
+.DS_Store

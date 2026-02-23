@@ -4,34 +4,73 @@
         x:Class="TryCr4ckP4ss.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="TryCr4ckP4ss"
-        Width="880" Height="620"
-        MinWidth="700" MinHeight="500"
+        Icon="/Assets/app-logo-solid.png"
+        Width="980" Height="680"
+        MinWidth="760" MinHeight="620"
         WindowStartupLocation="CenterScreen"
-        Background="#1a1b26"
-        ExtendClientAreaToDecorationsHint="True">
+        Background="{DynamicResource WindowBackgroundBrush}"
+        ExtendClientAreaToDecorationsHint="True"
+        KeyDown="OnWindowKeyDown"
+        PointerPressed="OnUserActivity">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#1a1b26"/>
+        <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="#16161e"/>
+        <SolidColorBrush x:Key="InputBackgroundBrush" Color="#24283b"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#24283b"/>
+        <SolidColorBrush x:Key="InsetBackgroundBrush" Color="#1a1b26"/>
+        <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#292e42"/>
+        <SolidColorBrush x:Key="ButtonHoverBrush" Color="#3b4261"/>
+        <SolidColorBrush x:Key="ButtonPressedBrush" Color="#414868"/>
+        <SolidColorBrush x:Key="SecurityCardBrush" Color="#1f2335"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#c0caf5"/>
+        <SolidColorBrush x:Key="TextMutedBrush" Color="#a9b1d6"/>
+        <SolidColorBrush x:Key="TextSubtleBrush" Color="#565f89"/>
+        <SolidColorBrush x:Key="BorderBrushColor" Color="#414868"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#7aa2f7"/>
+        <SolidColorBrush x:Key="AccentHoverBrush" Color="#9bb8f8"/>
+        <SolidColorBrush x:Key="AccentForegroundBrush" Color="#1a1b26"/>
+        <SolidColorBrush x:Key="DangerBrush" Color="#ff757f"/>
+        <SolidColorBrush x:Key="DangerForegroundBrush" Color="#1a1b26"/>
+        <SolidColorBrush x:Key="AddTitleBrush" Color="#bb9af7"/>
+        <SolidColorBrush x:Key="EditTitleBrush" Color="#7dcfff"/>
+        <SolidColorBrush x:Key="TotpBrush" Color="#7dcfff"/>
+        <SolidColorBrush x:Key="OverlayBrush" Color="#c01a1b26"/>
+        <SolidColorBrush x:Key="OverlaySoftBrush" Color="#b01a1b26"/>
+    </Window.Resources>
 
     <Window.Styles>
         <Style Selector="TextBlock">
-            <Setter Property="Foreground" Value="#c0caf5"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="FontFamily" Value="Inter, SF Pro Display, Segoe UI, sans-serif"/>
         </Style>
 
         <Style Selector="TextBox">
-            <Setter Property="Background" Value="#24283b"/>
-            <Setter Property="Foreground" Value="#c0caf5"/>
-            <Setter Property="BorderBrush" Value="#414868"/>
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushColor}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="14,10"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
         <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-            <Setter Property="BorderBrush" Value="#7aa2f7"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+        </Style>
+
+        <Style Selector="ComboBox">
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,6"/>
         </Style>
 
         <Style Selector="Button">
-            <Setter Property="Background" Value="#292e42"/>
-            <Setter Property="Foreground" Value="#c0caf5"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="16,10"/>
@@ -39,111 +78,113 @@
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
         <Style Selector="Button:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#3b4261"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
         </Style>
         <Style Selector="Button:pressed /template/ ContentPresenter">
-            <Setter Property="Background" Value="#414868"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
         </Style>
 
         <Style Selector="Button.primary">
-            <Setter Property="Background" Value="#7aa2f7"/>
-            <Setter Property="Foreground" Value="#1a1b26"/>
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
         <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#9bb8f8"/>
+            <Setter Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
         </Style>
 
         <Style Selector="Button.ghost">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#a9b1d6"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
             <Setter Property="Padding" Value="10,8"/>
         </Style>
         <Style Selector="Button.ghost:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#292e42"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
         </Style>
 
         <Style Selector="Button.danger">
-            <Setter Property="Background" Value="#414868"/>
-            <Setter Property="Foreground" Value="#ff757f"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
         </Style>
         <Style Selector="Button.danger:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#ff757f"/>
-            <Setter Property="Foreground" Value="#1a1b26"/>
+            <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource DangerForegroundBrush}"/>
         </Style>
 
         <Style Selector="Button.category">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#a9b1d6"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextMutedBrush}"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="CornerRadius" Value="6"/>
         </Style>
         <Style Selector="Button.category:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#24283b"/>
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
         </Style>
-        <Style Selector="Button.category.active">
-            <Setter Property="Background" Value="#292e42"/>
-            <Setter Property="Foreground" Value="#7aa2f7"/>
+
+        <Style Selector="Button.action">
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="MinWidth" Value="0"/>
+        </Style>
+
+        <Style Selector="ProgressBar">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Height" Value="6"/>
         </Style>
     </Window.Styles>
 
     <Grid>
-        <!-- Login -->
         <Grid IsVisible="{Binding !IsAuthenticated}" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel Spacing="0" Width="360">
                 <StackPanel Spacing="8" Margin="0,0,0,40" HorizontalAlignment="Center">
-                    <Border Background="#292e42" CornerRadius="24" Width="80" Height="80" Margin="0,0,0,20">
-                        <Viewbox Width="36" Height="36">
-                            <Canvas Width="24" Height="24">
-                                <Path Fill="#7aa2f7" Data="M12 1C8.676 1 6 3.676 6 7v2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V11a2 2 0 0 0-2-2h-2V7c0-3.324-2.676-6-6-6zm0 2c2.276 0 4 1.724 4 4v2H8V7c0-2.276 1.724-4 4-4z"/>
-                            </Canvas>
-                        </Viewbox>
+                    <Border Background="{DynamicResource ButtonBackgroundBrush}" CornerRadius="24" Width="80" Height="80" Margin="0,0,0,20" ClipToBounds="True">
+                        <Image Source="/Assets/app-logo-solid.png" Stretch="UniformToFill"/>
                     </Border>
-                    <TextBlock Text="TryCr4ckP4ss" FontSize="32" FontWeight="Bold" Foreground="#7aa2f7"/>
-                    <TextBlock Text="secure password vault" FontSize="13" Foreground="#565f89"/>
+                    <TextBlock Text="TryCr4ckP4ss" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                    <TextBlock Text="secure password vault" FontSize="13" Foreground="{DynamicResource TextSubtleBrush}"/>
                 </StackPanel>
 
-                <Border Background="#24283b" CornerRadius="16" Padding="32">
+                <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="16" Padding="32">
                     <StackPanel Spacing="24">
                         <StackPanel Spacing="10">
-                            <TextBlock Text="Master Password" FontSize="12" Foreground="#565f89"/>
+                            <TextBlock Text="Master Password" FontSize="12" Foreground="{DynamicResource TextSubtleBrush}"/>
                             <TextBox x:Name="LoginPasswordBox" Text="{Binding LoginPassword}" Watermark="Enter password..." PasswordChar="●" FontSize="15" KeyDown="OnLoginKeyDown"/>
                         </StackPanel>
 
-                        <TextBlock Text="{Binding LoginError}" IsVisible="{Binding IsLoginFailed}" Foreground="#ff757f" FontSize="12"/>
+                        <TextBlock Text="{Binding LoginError}" IsVisible="{Binding IsLoginFailed}" Foreground="{DynamicResource DangerBrush}" FontSize="12"/>
 
                         <Button Content="Unlock Vault" Command="{Binding LoginCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="16,12"/>
                     </StackPanel>
                 </Border>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12" Margin="0,24,0,0">
-                    <TextBlock Text="AES-256" FontSize="10" Foreground="#414868"/>
-                    <TextBlock Text="PBKDF2" FontSize="10" Foreground="#414868"/>
-                    <TextBlock Text="Local Storage" FontSize="10" Foreground="#414868"/>
+                    <TextBlock Text="AES-GCM" FontSize="10" Foreground="{DynamicResource BorderBrushColor}"/>
+                    <TextBlock Text="PBKDF2" FontSize="10" Foreground="{DynamicResource BorderBrushColor}"/>
+                    <TextBlock Text="Local Storage" FontSize="10" Foreground="{DynamicResource BorderBrushColor}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
 
-        <!-- Main App -->
-        <Grid IsVisible="{Binding IsAuthenticated}" ColumnDefinitions="220,*">
-            <!-- Sidebar -->
-            <Border Background="#16161e">
-                <StackPanel Margin="20">
-                    <!-- Logo -->
-                    <StackPanel Spacing="6" Margin="0,0,0,32">
-                        <TextBlock Text="TryCr4ckP4ss" FontSize="16" FontWeight="Bold" Foreground="#7aa2f7"/>
-                        <TextBlock Text="{Binding TotalCount, StringFormat='{}{0} passwords'}" FontSize="11" Foreground="#565f89"/>
+        <Grid IsVisible="{Binding IsAuthenticated}" ColumnDefinitions="230,*">
+            <Border Background="{DynamicResource SidebarBackgroundBrush}" BorderBrush="{DynamicResource ButtonBackgroundBrush}" BorderThickness="0,0,1,0">
+                <Grid Margin="14" RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" RowSpacing="10">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="TryCr4ckP4ss" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}"/>
+                        <TextBlock Text="{Binding TotalCount, StringFormat='{}{0} passwords'}" FontSize="11" Foreground="{DynamicResource TextSubtleBrush}"/>
+                        <TextBlock Text="{Binding AutoLockSummary}" FontSize="11" Foreground="{DynamicResource TextSubtleBrush}"/>
                     </StackPanel>
 
-                    <!-- Add Button -->
-                    <Button Content="+ Add Password" Command="{Binding ShowAddCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,0,28"/>
+                    <Button Grid.Row="1" Content="+ Add Password" Command="{Binding ShowAddCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
 
-                    <!-- Categories -->
-                    <TextBlock Text="Categories" FontSize="11" Foreground="#565f89" Margin="0,0,0,12"/>
-                    <StackPanel Spacing="4">
+                    <TextBlock Grid.Row="2" Text="Categories" FontSize="11" Foreground="{DynamicResource TextSubtleBrush}" Margin="0,4,0,2"/>
+
+                    <StackPanel Grid.Row="3" Spacing="2">
                         <Button Content="All" Command="{Binding SelectCategoryCommand}" CommandParameter="all" Classes="category"/>
+                        <Button Content="General" Command="{Binding SelectCategoryCommand}" CommandParameter="general" Classes="category"/>
                         <Button Content="Social" Command="{Binding SelectCategoryCommand}" CommandParameter="social" Classes="category"/>
                         <Button Content="Work" Command="{Binding SelectCategoryCommand}" CommandParameter="work" Classes="category"/>
                         <Button Content="Finance" Command="{Binding SelectCategoryCommand}" CommandParameter="finance" Classes="category"/>
@@ -151,46 +192,92 @@
                         <Button Content="Development" Command="{Binding SelectCategoryCommand}" CommandParameter="development" Classes="category"/>
                     </StackPanel>
 
-                    <!-- Lock -->
-                    <Button Content="Lock Vault" Command="{Binding LogoutCommand}" Classes="ghost" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,32,0,0"/>
-                </StackPanel>
+                    <Border Grid.Row="4" Background="{DynamicResource SecurityCardBrush}" CornerRadius="10" Padding="10">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Security" FontSize="11" Foreground="{DynamicResource TextSubtleBrush}"/>
+                            <Grid ColumnDefinitions="Auto,Auto,Auto,*" ColumnSpacing="6">
+                                <TextBlock Text="Lock" FontSize="12" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Column="1" Width="70" ItemsSource="{Binding AutoLockOptions}" SelectedItem="{Binding AutoLockMinutes}"/>
+                                <TextBlock Grid.Column="2" Text="min" FontSize="11" Foreground="{DynamicResource TextSubtleBrush}" VerticalAlignment="Center"/>
+                            </Grid>
+                            <CheckBox Content="Require re-auth for copy" IsChecked="{Binding RequireReauthForSensitiveActions}" FontSize="12"/>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" VerticalAlignment="Center">
+                                <TextBlock Text="Tokyo White" FontSize="12" VerticalAlignment="Center"/>
+                                <ToggleSwitch Grid.Column="1" IsChecked="{Binding UseTokyoWhiteTheme}" OffContent="Dark" OnContent="White"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Grid.Row="5" Content="Lock Vault" Command="{Binding LogoutCommand}" Classes="ghost" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"/>
+                </Grid>
             </Border>
 
-            <!-- Content -->
-            <Grid RowDefinitions="Auto,*">
-                <!-- Header -->
-                <Border Padding="24,20" BorderBrush="#292e42" BorderThickness="0,0,0,1">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="Vault" FontSize="22" FontWeight="Bold"/>
-                            <TextBlock FontSize="12" Foreground="#565f89">
-                                <Run Text="{Binding SelectedCategory}"/>
-                                <Run Text=" • "/>
-                                <Run Text="{Binding Credentials.Count}"/>
-                                <Run Text=" items"/>
+            <Grid Grid.Column="1" RowDefinitions="Auto,*">
+                <Border Padding="20,16" BorderBrush="{DynamicResource ButtonBackgroundBrush}" BorderThickness="0,0,0,1">
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="Vault" FontSize="22" FontWeight="Bold"/>
+                                <TextBlock FontSize="12" Foreground="{DynamicResource TextSubtleBrush}">
+                                    <Run Text="{Binding SelectedCategory}"/>
+                                    <Run Text=" • "/>
+                                    <Run Text="{Binding Credentials.Count}"/>
+                                    <Run Text=" items"/>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <Button Grid.Column="1" Content="{Binding FavoritesFilterLabel}" Command="{Binding ToggleFavoritesFilterCommand}" Classes="ghost"/>
+                            <ComboBox Grid.Column="2" Width="120" ItemsSource="{Binding SortOptions}" SelectedItem="{Binding SelectedSort}"/>
+                        </Grid>
+
+                        <TextBox Grid.Row="1" x:Name="SearchBox" Text="{Binding SearchTerm}" Watermark="Search site, user, notes..." KeyDown="OnSearchKeyDown"/>
+
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="18">
+                            <TextBlock FontSize="12" Foreground="{DynamicResource TextSubtleBrush}">
+                                <Run Text="Favorites "/>
+                                <Run Text="{Binding FavoritesCount}"/>
+                            </TextBlock>
+                            <TextBlock FontSize="12" Foreground="{DynamicResource TextSubtleBrush}">
+                                <Run Text="Weak "/>
+                                <Run Text="{Binding WeakCount}"/>
+                            </TextBlock>
+                            <TextBlock FontSize="12" Foreground="{DynamicResource TextSubtleBrush}">
+                                <Run Text="Reused "/>
+                                <Run Text="{Binding ReusedCount}"/>
                             </TextBlock>
                         </StackPanel>
-                        <TextBox Text="{Binding SearchTerm}" Watermark="Search passwords..." Width="280" KeyDown="OnSearchKeyDown"/>
                     </Grid>
                 </Border>
 
-                <!-- List -->
-                <ScrollViewer Grid.Row="1" Padding="24,16">
+                <ScrollViewer Grid.Row="1" Padding="20,14">
                     <ItemsControl ItemsSource="{Binding Credentials}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="vm:CredentialViewModel">
-                                <Border Background="#24283b" CornerRadius="10" Padding="16" Margin="0,0,0,10" Cursor="Hand" PointerPressed="OnCredentialClick">
-                                    <Grid ColumnDefinitions="Auto,*,Auto">
-                                        <Border Width="40" Height="40" Background="#292e42" CornerRadius="8" Margin="0,0,14,0">
+                                <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="10" Padding="12" Margin="0,0,0,10" Cursor="Hand" PointerPressed="OnCredentialClick">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="3">
+                                        <Border Grid.RowSpan="2" Width="40" Height="40" Background="{DynamicResource ButtonBackgroundBrush}" CornerRadius="8">
                                             <TextBlock Text="{Binding CategoryIcon}" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Border>
-                                        <StackPanel Spacing="3" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Site}" FontWeight="SemiBold" FontSize="14"/>
-                                            <TextBlock Text="{Binding Username}" FontSize="12" Foreground="#565f89"/>
+
+                                        <TextBlock Grid.Column="1" Text="{Binding Site}" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis"/>
+
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Top">
+                                            <Button Content="Copy" Command="{Binding $parent[Window].DataContext.CopyPasswordCommand}" CommandParameter="{Binding}" Classes="ghost action"/>
+                                            <Button Content="2FA" IsVisible="{Binding HasTotp}" Command="{Binding $parent[Window].DataContext.CopyTotpCommand}" CommandParameter="{Binding}" Classes="ghost action"/>
+                                            <Button Content="★" Command="{Binding $parent[Window].DataContext.ToggleFavoriteCommand}" CommandParameter="{Binding}" Classes="ghost action"/>
+                                            <Button Content="Edit" Command="{Binding $parent[Window].DataContext.EditCredentialCommand}" CommandParameter="{Binding}" Classes="ghost action"/>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Spacing="6">
-                                            <Button Content="Copy" Command="{Binding $parent[Window].DataContext.CopyPasswordCommand}" CommandParameter="{Binding}" Classes="ghost" FontSize="11"/>
-                                            <Button Content="Edit" Command="{Binding $parent[Window].DataContext.EditCredentialCommand}" CommandParameter="{Binding}" Classes="ghost" FontSize="11"/>
+
+                                        <StackPanel Grid.Row="1" Grid.Column="1" Spacing="2">
+                                            <TextBlock Text="{Binding Username}" FontSize="12" Foreground="{DynamicResource TextSubtleBrush}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding PasswordHealthText}" FontSize="11" Foreground="{Binding PasswordStrengthColor}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock IsVisible="{Binding HasTotp}" FontSize="11" Foreground="{DynamicResource TotpBrush}" TextTrimming="CharacterEllipsis">
+                                                <Run Text="2FA "/>
+                                                <Run Text="{Binding CurrentTotpCode}"/>
+                                                <Run Text=" ("/>
+                                                <Run Text="{Binding TotpSecondsRemaining}"/>
+                                                <Run Text="s)"/>
+                                            </TextBlock>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
@@ -199,77 +286,104 @@
                     </ItemsControl>
                 </ScrollViewer>
 
-                <!-- Empty -->
-                <StackPanel Grid.Row="1" IsVisible="{Binding IsEmpty}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16">
-                    <Border Background="#24283b" CornerRadius="24" Width="72" Height="72" HorizontalAlignment="Center">
-                        <TextBlock Text="+" FontSize="32" Foreground="#565f89" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <StackPanel Grid.Row="1" IsVisible="{Binding IsEmpty}" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="16" MaxWidth="360">
+                    <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="24" Width="72" Height="72" HorizontalAlignment="Center">
+                        <TextBlock Text="+" FontSize="32" Foreground="{DynamicResource TextSubtleBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
-                    <TextBlock Text="No passwords yet" FontSize="16" Foreground="#a9b1d6" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Add your first password to get started" FontSize="12" Foreground="#565f89" HorizontalAlignment="Center"/>
+                    <TextBlock Text="No passwords found" FontSize="16" Foreground="{DynamicResource TextMutedBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Try adjusting search/category filters or add a new password" FontSize="12" Foreground="{DynamicResource TextSubtleBrush}" TextAlignment="Center" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Grid>
 
-        <!-- Add Dialog -->
-        <Border IsVisible="{Binding ShowAddDialog}" Background="#c01a1b26">
-            <Border Background="#24283b" CornerRadius="16" Padding="28" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center" BoxShadow="0 25 50 15 #1a1b26">
+        <Border IsVisible="{Binding ShowAddDialog}" Background="{DynamicResource OverlayBrush}">
+            <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="16" Padding="28" Width="460" VerticalAlignment="Center" HorizontalAlignment="Center" BoxShadow="0 25 50 15 #1a1b26">
                 <StackPanel Spacing="20">
-                    <TextBlock Text="New Password" FontSize="20" FontWeight="Bold" Foreground="#bb9af7"/>
+                    <TextBlock Text="New Password" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource AddTitleBrush}"/>
 
                     <StackPanel Spacing="14">
                         <TextBox Text="{Binding NewSite}" Watermark="Website or app name"/>
                         <TextBox Text="{Binding NewUsername}" Watermark="Username or email"/>
-                        <Grid ColumnDefinitions="*,Auto">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                             <TextBox Text="{Binding NewPassword}" Watermark="Password" PasswordChar="●"/>
-                            <Button Grid.Column="1" Content="Generate" Command="{Binding GeneratePasswordCommand}" Margin="10,0,0,0"/>
+                            <Button Grid.Column="1" Content="Generate" Command="{Binding GeneratePasswordCommand}"/>
                         </Grid>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{Binding NewPasswordStrengthLabel}" Foreground="{Binding NewPasswordStrengthColor}" FontSize="11"/>
+                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding NewPasswordStrengthPercent}"/>
+                        </StackPanel>
+
+                        <TextBox Text="{Binding NewTotpSecret}" Watermark="TOTP Secret (Base32, optional)"/>
+                        <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewCategory}"/>
                         <TextBox Text="{Binding NewUrl}" Watermark="URL (optional)"/>
                         <TextBox Text="{Binding NewNotes}" Watermark="Notes (optional)" AcceptsReturn="True" Height="60"/>
                         <CheckBox Content="Add to favorites" IsChecked="{Binding NewIsFavorite}"/>
                     </StackPanel>
 
-                    <Border IsVisible="{Binding GeneratedPassword, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="#1a1b26" CornerRadius="8" Padding="12">
-                        <Grid ColumnDefinitions="*,Auto">
+                    <Border IsVisible="{Binding GeneratedPassword, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Background="{DynamicResource InsetBackgroundBrush}" CornerRadius="8" Padding="12">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                             <TextBlock Text="{Binding GeneratedPassword}" FontFamily="Consolas, monospace" FontSize="12" VerticalAlignment="Center"/>
                             <Button Grid.Column="1" Content="Use" Command="{Binding UseGeneratedPasswordCommand}" Classes="primary"/>
                         </Grid>
                     </Border>
 
-                    <Grid ColumnDefinitions="*,*" Margin="0,8,0,0">
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
                         <Button Content="Cancel" Command="{Binding CancelAddCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-                        <Button Grid.Column="1" Content="Save" Command="{Binding AddCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+                        <Button Grid.Column="1" Content="Save" Command="{Binding AddCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
                     </Grid>
                 </StackPanel>
             </Border>
         </Border>
 
-        <!-- Edit Dialog -->
-        <Border IsVisible="{Binding ShowEditDialog}" Background="#c01a1b26">
-            <Border Background="#24283b" CornerRadius="16" Padding="28" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Border IsVisible="{Binding ShowEditDialog}" Background="{DynamicResource OverlayBrush}">
+            <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="16" Padding="28" Width="460" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <StackPanel Spacing="20">
-                    <TextBlock Text="Edit Password" FontSize="20" FontWeight="Bold" Foreground="#7dcfff"/>
+                    <TextBlock Text="Edit Password" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource EditTitleBrush}"/>
 
                     <StackPanel Spacing="14">
                         <TextBox Text="{Binding NewSite}" Watermark="Website"/>
                         <TextBox Text="{Binding NewUsername}" Watermark="Username"/>
                         <TextBox Text="{Binding NewPassword}" Watermark="Password" PasswordChar="●"/>
+
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{Binding NewPasswordStrengthLabel}" Foreground="{Binding NewPasswordStrengthColor}" FontSize="11"/>
+                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding NewPasswordStrengthPercent}"/>
+                        </StackPanel>
+
+                        <TextBox Text="{Binding NewTotpSecret}" Watermark="TOTP Secret (Base32)"/>
+                        <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewCategory}"/>
                         <TextBox Text="{Binding NewUrl}" Watermark="URL"/>
                         <TextBox Text="{Binding NewNotes}" Watermark="Notes" AcceptsReturn="True" Height="60"/>
                         <CheckBox Content="Favorite" IsChecked="{Binding NewIsFavorite}"/>
                     </StackPanel>
 
-                    <Grid ColumnDefinitions="*,*,*" Margin="0,8,0,0">
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10" Margin="0,8,0,0">
                         <Button Content="Cancel" Command="{Binding CancelAddCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-                        <Button Grid.Column="1" Content="Delete" Command="{Binding DeleteCredentialCommand}" CommandParameter="{Binding SelectedCredential}" Classes="danger" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
-                        <Button Grid.Column="2" Content="Save" Command="{Binding SaveEditCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="10,0,0,0"/>
+                        <Button Grid.Column="1" Content="Delete" Command="{Binding DeleteCredentialCommand}" CommandParameter="{Binding SelectedCredential}" Classes="danger" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        <Button Grid.Column="2" Content="Save" Command="{Binding SaveEditCredentialCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
                     </Grid>
                 </StackPanel>
             </Border>
         </Border>
 
-        <!-- Toast -->
-        <Border IsVisible="{Binding ShowStatus}" Background="#7aa2f7" CornerRadius="8" Padding="16,10" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,24" BoxShadow="0 4 12 2 #7aa2f780">
-            <TextBlock Text="{Binding StatusMessage}" FontSize="13" Foreground="#1a1b26" FontWeight="Medium"/>
+        <Border IsVisible="{Binding ShowReauthDialog}" Background="{DynamicResource OverlaySoftBrush}">
+            <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="14" Padding="24" Width="360" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Confirm Master Password" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="Re-authentication is required for this sensitive action." FontSize="12" Foreground="{DynamicResource TextSubtleBrush}" TextWrapping="Wrap"/>
+                    <TextBox x:Name="ReauthPasswordBox" Text="{Binding ReauthPassword}" PasswordChar="●" Watermark="Master password" KeyDown="OnReauthKeyDown"/>
+                    <TextBlock Text="{Binding ReauthError}" IsVisible="{Binding ReauthError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Foreground="{DynamicResource DangerBrush}" FontSize="12"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Content="Cancel" Command="{Binding CancelReauthCommand}"/>
+                        <Button Grid.Column="1" Content="Confirm" Command="{Binding ConfirmReauthCommand}" Classes="primary"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <Border IsVisible="{Binding ShowStatus}" Background="{DynamicResource AccentBrush}" CornerRadius="8" Padding="16,10" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,24" BoxShadow="0 4 12 2 #7aa2f780">
+            <TextBlock Text="{Binding StatusMessage}" FontSize="13" Foreground="{DynamicResource AccentForegroundBrush}" FontWeight="Medium"/>
         </Border>
     </Grid>
 </Window>

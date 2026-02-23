@@ -3,7 +3,6 @@
              x:Class="TryCr4ckP4ss.App"
              xmlns:local="using:TryCr4ckP4ss"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
         <local:ViewLocator/>

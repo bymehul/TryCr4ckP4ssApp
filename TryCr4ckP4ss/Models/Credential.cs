@@ -11,6 +11,7 @@ public class Credential
     public string Url { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
     public string Category { get; set; } = "general";
+    public string TotpSecret { get; set; } = string.Empty;
     public bool IsFavorite { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime ModifiedAt { get; set; }

@@ -30,6 +30,7 @@ dotnet run
 ## Build Docs
 - Cross-platform build + publish: [BUILD.md](BUILD.md)
 - GitHub Actions artifact workflow: `.github/workflows/build-artifacts.yml`
+- Artifacts are generated on push, tags, PRs, and manual workflow runs.
 
 ## Contributing
 - See [CONTRIBUTING.md](CONTRIBUTING.md)

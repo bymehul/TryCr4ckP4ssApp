@@ -25,7 +25,7 @@ jobs:
             os: macos-latest
             rid: osx-arm64
           - name: osx-x64
-            os: macos-13
+            os: macos-latest
             rid: osx-x64
 
     steps:

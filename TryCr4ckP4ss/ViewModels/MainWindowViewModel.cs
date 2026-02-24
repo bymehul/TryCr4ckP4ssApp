@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -20,6 +22,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private static readonly TimeSpan SensitiveActionReauthWindow = TimeSpan.FromSeconds(45);
 
     private readonly VaultService _vaultService;
+    private readonly MasterAuthService _masterAuthService;
     private readonly UiStateService _uiStateService;
     private string _masterPassword = string.Empty;
     private CancellationTokenSource? _sessionLoopCts;
@@ -28,6 +31,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private Action? _pendingSensitiveAction;
     private int _statusSequence;
     private bool _isApplyingUiState;
+    private int _failedLoginAttempts;
+    private bool _isClosingForSecurity;
 
     [ObservableProperty]
     private bool _isAuthenticated;
@@ -40,6 +45,21 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _loginPassword = string.Empty;
+
+    [ObservableProperty]
+    private string _securityAnswer = string.Empty;
+
+    [ObservableProperty]
+    private bool _isFirstTimeSetup;
+
+    [ObservableProperty]
+    private bool _showForgotPassword;
+
+    [ObservableProperty]
+    private string _forgotSecurityAnswer = string.Empty;
+
+    [ObservableProperty]
+    private string _forgotNewPassword = string.Empty;
 
     [ObservableProperty]
     private string _searchTerm = string.Empty;
@@ -155,19 +175,37 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool IsEmpty => Credentials.Count == 0;
     public string FavoritesFilterLabel => FavoritesOnly ? "Favorites: On" : "Favorites Only";
     public string AutoLockSummary => $"Auto-lock after {AutoLockMinutes}m";
+    public string LoginButtonLabel => IsFirstTimeSetup ? "Create Vault" : "Unlock Vault";
+    public string LoginModeLabel => IsFirstTimeSetup ? "First-time setup" : "Enter master password";
 
     public MainWindowViewModel()
     {
         var dataDirectory = Path.Combine(AppContext.BaseDirectory, "Data");
         var vaultPath = Path.Combine(dataDirectory, "vault.dat");
+        var authPath = Path.Combine(dataDirectory, "master-auth.json");
         var uiStatePath = Path.Combine(dataDirectory, "ui-state.json");
 
         _vaultService = new VaultService(vaultPath);
+        _masterAuthService = new MasterAuthService(authPath);
         _uiStateService = new UiStateService(uiStatePath);
+        IsFirstTimeSetup = !_masterAuthService.HasProfile;
 
         ApplyUiState(_uiStateService.Load());
         UpdateNewPasswordStrength();
         StartSessionLoop();
+    }
+
+    partial void OnIsFirstTimeSetupChanged(bool value)
+    {
+        OnPropertyChanged(nameof(LoginButtonLabel));
+        OnPropertyChanged(nameof(LoginModeLabel));
+
+        if (value)
+        {
+            ShowForgotPassword = false;
+            ForgotSecurityAnswer = string.Empty;
+            ForgotNewPassword = string.Empty;
+        }
     }
 
     partial void OnSearchTermChanged(string value)
@@ -236,29 +274,174 @@ public partial class MainWindowViewModel : ViewModelBase
     private void Login()
     {
         RegisterActivity();
+        if (_isClosingForSecurity)
+        {
+            return;
+        }
+
+        ShowForgotPassword = false;
+        ForgotSecurityAnswer = string.Empty;
+        ForgotNewPassword = string.Empty;
+        LoginError = string.Empty;
+        IsLoginFailed = false;
 
         if (string.IsNullOrWhiteSpace(LoginPassword))
         {
-            LoginError = "Password required";
-            IsLoginFailed = true;
+            SetLoginError("Password required");
+            return;
+        }
+
+        if (IsFirstTimeSetup)
+        {
+            if (!MasterAuthService.TryNormalizeSecurityAnswer(SecurityAnswer, out var normalizedAnswer))
+            {
+                SetLoginError("Answer must be one lowercase word");
+                return;
+            }
+
+            var vaultAlreadyExists = _vaultService.VaultExists;
+            if (!_vaultService.Initialize(LoginPassword))
+            {
+                SetLoginError("Invalid password");
+                return;
+            }
+
+            if (!vaultAlreadyExists)
+            {
+                try
+                {
+                    _vaultService.SaveVault(LoginPassword);
+                }
+                catch
+                {
+                    SetLoginError("Failed to create vault");
+                    return;
+                }
+            }
+
+            if (!_masterAuthService.SaveProfile(LoginPassword, normalizedAnswer))
+            {
+                SetLoginError("Failed to save setup");
+                return;
+            }
+
+            IsFirstTimeSetup = false;
+            CompleteLogin("Vault created");
+            return;
+        }
+
+        if (!_masterAuthService.VerifyMasterPassword(LoginPassword))
+        {
+            HandleFailedPasswordAttempt("Invalid password");
             return;
         }
 
         if (_vaultService.Initialize(LoginPassword))
         {
-            _masterPassword = LoginPassword;
-            IsAuthenticated = true;
-            IsLoginFailed = false;
-            LoginPassword = string.Empty;
-            _lastReauthUtc = DateTimeOffset.UtcNow;
-            LoadCredentials();
-            ShowStatusMessage("Vault unlocked");
+            CompleteLogin("Vault unlocked");
         }
         else
         {
-            LoginError = "Invalid password";
-            IsLoginFailed = true;
+            HandleFailedPasswordAttempt("Vault data could not be opened");
         }
+    }
+
+    [RelayCommand]
+    private void OpenForgotPassword()
+    {
+        RegisterActivity();
+        if (IsFirstTimeSetup || _isClosingForSecurity)
+        {
+            return;
+        }
+
+        ShowForgotPassword = true;
+        ForgotSecurityAnswer = string.Empty;
+        ForgotNewPassword = string.Empty;
+        LoginError = string.Empty;
+        IsLoginFailed = false;
+    }
+
+    [RelayCommand]
+    private void CancelForgotPassword()
+    {
+        RegisterActivity();
+        ShowForgotPassword = false;
+        ForgotSecurityAnswer = string.Empty;
+        ForgotNewPassword = string.Empty;
+    }
+
+    [RelayCommand]
+    private void ResetMasterPassword()
+    {
+        RegisterActivity();
+        if (IsFirstTimeSetup || _isClosingForSecurity)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(ForgotNewPassword))
+        {
+            SetLoginError("New master password required");
+            return;
+        }
+
+        if (!MasterAuthService.TryNormalizeSecurityAnswer(ForgotSecurityAnswer, out var normalizedAnswer))
+        {
+            SetLoginError("Answer must be one lowercase word");
+            return;
+        }
+
+        if (!_masterAuthService.VerifySecurityAnswer(normalizedAnswer))
+        {
+            SetLoginError("Security answer is incorrect");
+            return;
+        }
+
+        if (!_masterAuthService.TryRecoverMasterPassword(normalizedAnswer, out var currentMasterPassword))
+        {
+            SetLoginError("Recovery unavailable for this vault");
+            return;
+        }
+
+        if (!_vaultService.Initialize(currentMasterPassword))
+        {
+            SetLoginError("Vault recovery failed");
+            return;
+        }
+
+        try
+        {
+            _vaultService.SaveVault(ForgotNewPassword);
+        }
+        catch
+        {
+            SetLoginError("Failed to update vault password");
+            return;
+        }
+
+        if (!_masterAuthService.SaveProfile(ForgotNewPassword, normalizedAnswer))
+        {
+            try
+            {
+                _vaultService.SaveVault(currentMasterPassword);
+            }
+            catch
+            {
+                SetLoginError("Failed to save new password and vault restore failed");
+                return;
+            }
+
+            SetLoginError("Failed to save new password");
+            return;
+        }
+
+        LoginPassword = ForgotNewPassword;
+        _failedLoginAttempts = 0;
+        ShowForgotPassword = false;
+        ForgotSecurityAnswer = string.Empty;
+        ForgotNewPassword = string.Empty;
+        CompleteLogin("Master password reset");
     }
 
     [RelayCommand]
@@ -672,6 +855,68 @@ public partial class MainWindowViewModel : ViewModelBase
         _ => "recent"
     };
 
+    private void CompleteLogin(string statusMessage)
+    {
+        _masterPassword = LoginPassword;
+        _failedLoginAttempts = 0;
+        IsAuthenticated = true;
+        IsLoginFailed = false;
+        LoginPassword = string.Empty;
+        SecurityAnswer = string.Empty;
+        ShowForgotPassword = false;
+        ForgotSecurityAnswer = string.Empty;
+        ForgotNewPassword = string.Empty;
+        _lastReauthUtc = DateTimeOffset.UtcNow;
+        LoadCredentials();
+        ShowStatusMessage(statusMessage);
+    }
+
+    private void SetLoginError(string message)
+    {
+        LoginError = message;
+        IsLoginFailed = true;
+    }
+
+    private void HandleFailedPasswordAttempt(string message)
+    {
+        _failedLoginAttempts++;
+        if (_failedLoginAttempts >= 2)
+        {
+            SetLoginError("Warning: 2 failed password attempts. App is closing.");
+            ShowStatusMessage("Security warning: closing app");
+            StartSecurityShutdown();
+            return;
+        }
+
+        SetLoginError(message);
+    }
+
+    private void StartSecurityShutdown()
+    {
+        if (_isClosingForSecurity)
+        {
+            return;
+        }
+
+        _isClosingForSecurity = true;
+        Task.Run(async () =>
+        {
+            await Task.Delay(1800);
+            await Dispatcher.UIThread.InvokeAsync(CloseApplication);
+        });
+    }
+
+    private static void CloseApplication()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
+        {
+            desktopLifetime.Shutdown();
+            return;
+        }
+
+        Environment.Exit(1);
+    }
+
     private void ApplyUiState(UiState state)
     {
         _isApplyingUiState = true;
@@ -770,10 +1015,16 @@ public partial class MainWindowViewModel : ViewModelBase
         _masterPassword = string.Empty;
         _pendingSensitiveAction = null;
         _lastReauthUtc = DateTimeOffset.MinValue;
+        _failedLoginAttempts = 0;
+        _isClosingForSecurity = false;
 
         IsAuthenticated = false;
         IsLoginFailed = false;
         LoginPassword = string.Empty;
+        SecurityAnswer = string.Empty;
+        ShowForgotPassword = false;
+        ForgotSecurityAnswer = string.Empty;
+        ForgotNewPassword = string.Empty;
         ShowDetailPanel = false;
         ShowAddDialog = false;
         ShowEditDialog = false;

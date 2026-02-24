@@ -177,6 +177,16 @@ public partial class MainWindow : Window
         }
     }
 
+    private void OnForgotKeyDown(object? sender, KeyEventArgs e)
+    {
+        Vm?.RegisterActivity();
+
+        if (e.Key == Key.Enter && Vm is { } vm)
+        {
+            vm.ResetMasterPasswordCommand.Execute(null);
+        }
+    }
+
     private void OnReauthKeyDown(object? sender, KeyEventArgs e)
     {
         Vm?.RegisterActivity();

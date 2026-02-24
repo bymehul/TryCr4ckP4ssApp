@@ -150,14 +150,24 @@
 
                 <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="16" Padding="32">
                     <StackPanel Spacing="24">
+                        <TextBlock Text="{Binding LoginModeLabel}" FontSize="12" Foreground="{DynamicResource TextSubtleBrush}"/>
+
                         <StackPanel Spacing="10">
                             <TextBlock Text="Master Password" FontSize="12" Foreground="{DynamicResource TextSubtleBrush}"/>
                             <TextBox x:Name="LoginPasswordBox" Text="{Binding LoginPassword}" Watermark="Enter password..." PasswordChar="●" FontSize="15" KeyDown="OnLoginKeyDown"/>
                         </StackPanel>
 
+                        <StackPanel Spacing="8" IsVisible="{Binding IsFirstTimeSetup}">
+                            <TextBlock Text="Security Question: which subject u hate most" FontSize="12" Foreground="{DynamicResource TextSubtleBrush}"/>
+                            <TextBlock Text="Answer must be one lowercase word" FontSize="11" Foreground="{DynamicResource BorderBrushColor}"/>
+                            <TextBox Text="{Binding SecurityAnswer}" Watermark="example: maths" FontSize="15" KeyDown="OnLoginKeyDown"/>
+                        </StackPanel>
+
                         <TextBlock Text="{Binding LoginError}" IsVisible="{Binding IsLoginFailed}" Foreground="{DynamicResource DangerBrush}" FontSize="12"/>
 
-                        <Button Content="Unlock Vault" Command="{Binding LoginCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="16,12"/>
+                        <Button Content="{Binding LoginButtonLabel}" Command="{Binding LoginCommand}" Classes="primary" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="16,12"/>
+
+                        <Button Content="Forgot Password?" Command="{Binding OpenForgotPasswordCommand}" Classes="ghost" HorizontalAlignment="Right" IsVisible="{Binding !IsFirstTimeSetup}"/>
                     </StackPanel>
                 </Border>
 
@@ -377,6 +387,22 @@
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                         <Button Content="Cancel" Command="{Binding CancelReauthCommand}"/>
                         <Button Grid.Column="1" Content="Confirm" Command="{Binding ConfirmReauthCommand}" Classes="primary"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <Border IsVisible="{Binding ShowForgotPassword}" Background="{DynamicResource OverlaySoftBrush}">
+            <Border Background="{DynamicResource CardBackgroundBrush}" CornerRadius="14" Padding="24" Width="380" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Forgot master password" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="Security Question: which subject u hate most" FontSize="12" Foreground="{DynamicResource TextSubtleBrush}" TextWrapping="Wrap"/>
+                    <TextBox Text="{Binding ForgotSecurityAnswer}" Watermark="one lowercase word" FontSize="13" KeyDown="OnForgotKeyDown"/>
+                    <TextBox Text="{Binding ForgotNewPassword}" Watermark="New master password" PasswordChar="●" FontSize="13" KeyDown="OnForgotKeyDown"/>
+                    <TextBlock Text="{Binding LoginError}" IsVisible="{Binding IsLoginFailed}" Foreground="{DynamicResource DangerBrush}" FontSize="12"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Button Content="Cancel" Command="{Binding CancelForgotPasswordCommand}"/>
+                        <Button Grid.Column="1" Content="Reset Password" Command="{Binding ResetMasterPasswordCommand}" Classes="primary"/>
                     </Grid>
                 </StackPanel>
             </Border>
